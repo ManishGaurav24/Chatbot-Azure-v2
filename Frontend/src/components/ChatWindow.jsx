@@ -162,7 +162,7 @@ const ChatWindow = ({
             />
 
             {/* 🔹 SOURCES / CITATIONS */}
-            {/* {msg.role === "assistant" &&
+            {msg.role === "assistant" &&
               Array.isArray(msg.sources) &&
               msg.sources.length > 0 && (
                 <div className="mt-3 border-t border-dashed pt-2 text-gray-600">
@@ -184,10 +184,10 @@ const ChatWindow = ({
                     ))}
                   </ul>
                 </div>
-              )} */}
+              )}
 
             {/* 🔹 SINGLE SOURCE / CITATION */}
-            {msg.role === "assistant" &&
+            {/* {msg.role === "assistant" &&
               Array.isArray(msg.sources) &&
               msg.sources.length > 0 && (() => {
                 const src = msg.sources[0];
@@ -207,7 +207,7 @@ const ChatWindow = ({
                     </a>
                   </div>
                 );
-              })()}
+              })()} */}
 
             {/* Feedback */}
             {msg.role === "assistant" && msg.id && (

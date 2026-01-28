@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 from utils.cosmos_connection import get_last_messages_for_session
 from utils.log_utils import debug_print
+from utils.response_formatter import remove_doc_references
 
 load_dotenv()
 
@@ -40,7 +41,8 @@ async def warm_up_search_index():
 
 def extract_sources_from_completion(completion) -> list[dict]:
     """
-    Extract unique document sources (title + url) from Azure OpenAI RAG completion
+    Extract unique document sources (title + url) from Azure OpenAI RAG completion,
+    sorted by highest relevance score first.
     """
     sources = []
     seen_urls = set()
@@ -94,13 +96,12 @@ CORE BEHAVIOR:
 - Maintain conversation continuity by referencing previous exchanges when relevant
 
 RESPONSE GUIDELINES:
+0. Strictly Follow - Never give Document name (Example - [Doc1][Doc2]) in the response
 1. ALWAYS attempt to answer based on available document content
 2. If you find relevant information, provide a comprehensive response with specific details
-3. If information is partial, say "Based on the available information..." and provide what you can
 4. If no relevant information is found, suggest alternative questions or topics the user might explore
 5. Never simply say "I don't know" without attempting to be helpful
 6. Ask clarifying questions when the user's intent is unclear
-7. Provide context and explain technical terms when necessary
 
 CONVERSATION FLOW:
 - Acknowledge the user's question
@@ -257,6 +258,7 @@ Remember: You are designed to be maximally helpful. Even when perfect informatio
                 # debug_print("Returning final response")
                 # Extract the main response
                 response_content = completion.choices[0].message.content
+                response_content = remove_doc_references(response_content)
                 # 🔹 NEW: Extract sources
                 sources = extract_sources_from_completion(completion)
 
